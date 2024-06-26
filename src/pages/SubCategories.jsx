@@ -32,7 +32,7 @@ function SubCategories() {
         if (!subCategoryData) {
             return null; // or return a loading spinner or some placeholder content
         }
-
+        console.log(subCategoryData)
         const subCategories = subCategoryData;
         let jsxElements = [];
         subCategories?.map((element, index) => {
@@ -48,7 +48,7 @@ function SubCategories() {
 
     useEffect(() => {
         fetchSubCategories();
-    }, []);
+    }, [true]);
 
     return (
         <div className='w-full flex justify-center'>

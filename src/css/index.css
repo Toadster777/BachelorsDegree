@@ -131,6 +131,18 @@ textarea {
     /* Adjust as needed */
 }
 
+.rcw-launcher {
+    background-color: #ff882d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rcw-client>.rcw-message-text {
+    background-color: #f4f7f9;
+}
+
+
 /* Swiper END */
 
 
@@ -176,6 +188,31 @@ textarea {
 }
 
 /* Product Card END */
+
+
+
+/* CHAT STYLES START */
+
+.rcw-picker-btn {
+    @apply !hidden;
+}
+
+.rcw-new-message {
+    width: 100%;
+}
+
+.rcw-sender {
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.rcw-header {
+    background-color: #ff882d !important;
+}
+
+
+/* CHAT STYLES END */
 
 @media screen and (min-width:480px) {}
 

@@ -12,6 +12,8 @@ import ProductsDisplay from './pages/ProductsDisplay'
 import ProductPage from './pages/ProductPage'
 import Checkout from './pages/Checkout'
 import ProfilePage from './pages/ProfilePage'
+import { ChatAssistant } from './components/chatAssistant'
+
 function App() {
 
   useEffect(() => {
@@ -24,6 +26,7 @@ function App() {
 
   return (
     <>
+
       <NavBar />
       <BrowserRouter>
 
@@ -38,12 +41,14 @@ function App() {
           <Route path="/products/search" element={<ProductsDisplay />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path='/profile' element={<ProfilePage />} />
-
-          {/* <Route path='*' element={<NotFound />} /> */}
+          {/* <Route path='/contact-us' element={<Contact />} />
+          <Route path='/favorites' element={<Favorites />} /> */}
+          <Route path='*' element={<NotFound />} />
         </Routes>
 
       </BrowserRouter>
-      <Footer />  
+      <ChatAssistant />
+      <Footer />
     </>
 
 

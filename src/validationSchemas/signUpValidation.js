@@ -1,19 +1,21 @@
 import * as yup from 'yup';
 import "yup-phone-lite";
 
-
 // schema for signUp yup validation
-const signUpSchema = yup.object().shape({
-    firstName: yup.string().required("First Name Is Required"),
-    lastName: yup.string().required("Last Name Is Required"),
-    email: yup.string().email().required("Please enter a valid email address"),
-    phoneNo: yup.string()
-        .phone("RO", true,)
-        .required("Please enter a valid phone number for Romania"),
-    password: yup.string().min(6).required("Password must be at least 6 characters long"),
-    confirmPassword: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match'),
-});
+    const signUpSchema = yup.object().shape({
+        firstName: yup.string().required("Numele este obligatoriu"),
+        lastName: yup.string().required("Prenumele este obligatoriu"),
+        email: yup.string().email().required("Te rog introdu o adresa de email valida"),
+        phoneNo: yup.string()
+            .phone("RO", true,)
+            .required("Te rog introdu un numar de telefon valid pentru Romania"),
+        password: yup.string()
+            .min(8, "Parola trebuie sa aiba cel putin 8 caractere")
+            .matches(/[a-z]/, "Parola trebuie sa contina cel putin o litera mica")
+            .matches(/[A-Z]/, "Parola trebuie sa contina cel putin o litera mare")
+            .matches(/[a-zA-Z]+[^a-zA-Z\s]+/, "cel putin 1 numar sau caracter special (@,!,#, etc).")
+            .required("Parola este obligatorie"),
+        confirmPassword: yup.string().oneOf([yup.ref('password'), null], 'Parolele trebuie sa se potriveasca'),
+    });
 
-
-
-export default signUpSchema
+export default signUpSchema;

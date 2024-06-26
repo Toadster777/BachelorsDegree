@@ -18,7 +18,7 @@ function ProductsDisplay() {
 
 
 
-
+  
   const fetchSubcategoryProducts = async () => {
     setIsLoading(true);
     try {
@@ -194,14 +194,14 @@ function ProductsDisplay() {
   }, []); // Empty dependency array means this effect runs once on mount
 
   useEffect(() => {
-    if (filterParams) {
-      const match = location.pathname.match(/\/([^\/]+)\/([^\/]+)/);
-      if (match && match[2] === 'search') {
-        fetchSearchedProducts();
-      } else {
-        fetchSubcategoryProducts();
-      }
+
+    const match = location.pathname.match(/\/([^\/]+)\/([^\/]+)/);
+    if (match && match[2] === 'search') {
+      fetchSearchedProducts();
+    } else {
+      fetchSubcategoryProducts();
     }
+
   }, [filterParams]); // Runs whenever filterParams changes
 
   useEffect(() => {

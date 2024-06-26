@@ -186,6 +186,7 @@ function OrderForm({ total, productsIds }) {
         }
 
         postOrder(body);
+        window.location.reload();
     }
 
 

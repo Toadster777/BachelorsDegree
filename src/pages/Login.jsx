@@ -79,22 +79,22 @@ function Login() {
                     {({ errors, touched }) => (
                         <Form className="max-w-xl p-10 flex flex-col  justify-center w-full border-2 border-secondary rounded-lg shadow-lg">
                             <div className="mb-5">
-                                <label for="identifier" className="block mb-2 text-sm font-medium text-gray-900 ">Your email</label>
+                                <label for="identifier" className="block mb-2 text-sm font-medium text-gray-900 ">Adresa de email</label>
                                 <Field type="email" name="identifier" id="email" className="bg-gray-50 border border-accent text-gray-900 text-sm rounded-lg block w-full p-2.5  " placeholder="Email" />
                                 {errors.identifier && touched.identifier ? (
                                     <div className='text-error'>{errors.identifier}</div>
                                 ) : null}
                             </div>
                             <div className="mb-5">
-                                <label for="password" className="block mb-2 text-sm font-medium text-gray-900 ">Your password</label>
-                                <Field type="password" name="password" id="password" className="bg-gray-50 border border-accent text-gray-900 text-sm rounded-lg block w-full p-2.5  " placeholder="Password" />
+                                <label for="password" className="block mb-2 text-sm font-medium text-gray-900 ">Parola</label>
+                                <Field type="password" name="password" id="password" className="bg-gray-50 border border-accent text-gray-900 text-sm rounded-lg block w-full p-2.5  " placeholder="Parola" />
                                 {errors.password && touched.password ? (
                                     <div className='text-error'>{errors.password}</div>
                                 ) : null}
                             </div>
                             <div className='w-full flex flex-col gap-4'>
-                                <button type="submit" className="text-white md:max-w-[8rem] bg-secondary font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center ">Submit</button>
-                                <span className=''>Don't have an account? Create one <a className='text-primary underline ' href='/signUp'>Here</a></span>
+                                <button type="submit" className="text-white md:max-w-[8rem] bg-secondary font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center ">Autentificare</button>
+                                <span className=''>Nu ai un cont? Creează unul <a className='text-primary underline ' href='/signUp'>Aici!</a></span>
                             </div>
 
                         </Form>
