@@ -4,12 +4,14 @@ import Swiper from 'swiper/bundle';
 import 'swiper/css/bundle';
 import { addToCheckout } from '../helpers'
 import { splitCamelCase, getFirstWord, getSecondWord } from '../utils';
+import { ToastContainer } from "react-toastify";
 
 
 function ProductPage() {
 
     const [productData, setProductData] = useState();
     const [isLoading, setIsLoading] = useState(false);
+    const [swiperInitialized, setSwiperInitialized] = useState(false);
     const productIdentifier = window.location.pathname;
 
     const fetchProduct = async () => {
@@ -29,6 +31,23 @@ function ProductPage() {
     };
 
 
+    const initSwiper = () => {
+        if (!swiperInitialized && productData) {
+            new Swiper('.swiper', {
+                loop: true,
+                pagination: {
+                    el: '.swiper-pagination',
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+            });
+            setSwiperInitialized(true);
+        }
+    };
+
+
     const handleResize = (swiperElement) => {
         if (window.innerWidth <= 1520 && window.innerWidth >= 769 && swiperElement != undefined) {
             swiperElement.style.width = (window.innerWidth / 2) + 'px';
@@ -36,6 +55,7 @@ function ProductPage() {
         }
         else if (window.innerWidth <= 768 && swiperElement != undefined) {
             swiperElement.style.width = window.innerWidth + 'px';
+            swiperElement.style.height = window.innerWidth + 'px';
         }
         else {
             swiperElement.style.width = '800px';
@@ -115,25 +135,12 @@ function ProductPage() {
 
     }
 
+    useEffect(() => {
+        initSwiper();
+    }, [productData]);
+
 
     useEffect(() => {
-
-        const swiper = new Swiper('.swiper', {
-            // Optional parameters
-            loop: true,
-
-            // If we need pagination
-            pagination: {
-                el: '.swiper-pagination',
-            },
-
-            // Navigation arrows
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
-        });
-
 
         const swiperElement = document.getElementById("productImageSwiper");
         handleResize(swiperElement);
@@ -144,7 +151,7 @@ function ProductPage() {
 
     return (
         <div className='w-full flex justify-center'>
-
+            <ToastContainer />
             <div className='contentContainer verticalContent flex flex-col w-full'>
 
                 {/* IMAGE CAROUSEL LEFT AND INFO RIGHT */}

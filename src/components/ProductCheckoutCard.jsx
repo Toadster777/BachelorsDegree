@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-
+import { showToastMessage } from '../helpers.js';
 function ProductCheckoutCard({ product }) {
     const [checkout, setCheckout] = useState(JSON.parse(localStorage.getItem('checkout')));
 
@@ -27,7 +27,10 @@ function ProductCheckoutCard({ product }) {
         const updatedCheckout = checkout.filter(item => item.productId !== product.id);
         setCheckout(updatedCheckout);
         localStorage.setItem('checkout', JSON.stringify(updatedCheckout));
-        window.location.reload();
+        showToastMessage("Produsul a fost eliminat din cos cu succes!", "success");
+        setTimeout(() => {
+            window.location.reload();
+        }, 2000);
     };
 
 
@@ -62,7 +65,7 @@ function ProductCheckoutCard({ product }) {
                         </svg>
                     </button>
                 </div>
-                <button onClick={removeFromCart} className='text-error'>Remove</button>
+                <button onClick={removeFromCart} className='text-error'>Sterge</button>
 
             </div>
         </div>

@@ -2,27 +2,45 @@ import React, { useEffect, useState } from 'react'
 import ProductCard from '../components/ProductCard'
 import { useSearchParams, useLocation } from 'react-router-dom';
 import { API, } from "../constants";
-import { getFirstWord, getSecondWord, getQueryParamsAfterSubcategory } from '../utils';
+import { getFirstWord, getSecondWord, } from '../utils';
 import { Formik, Field, Form, useField } from 'formik';
 import { useNavigate } from 'react-router-dom';
+import { useAuthContext } from "../contexts/AuthContext";
+import { ToastContainer } from "react-toastify";
+
 
 function ProductsDisplay() {
   const location = useLocation();
   const navigate = useNavigate();
-
+  const { isLoggedIn } = useAuthContext();
   const [productsData, setProductsData] = useState([]);
   const [queryParameters] = useSearchParams()
   const [filterParams, setFilterParams] = useState('');
   const [filterData, setFilterData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [match, setMatch] = useState(location.pathname.match(/\/([^\/]+)\/([^\/]+)/));
+
+  const getQueryParams = () => {
+    let queryFilters = "{";
+    const entries = Array.from(queryParameters.entries());
+    entries.forEach((entry, index) => {
+      if (index !== 0) { // Skip the first entry
+        queryFilters += `"${entry[0]}":{"${entry[1]}":true}`;
+        if (index < entries.length - 1) { // Check if it's not the last entry
+          queryFilters += ",";
+        }
+      }
+    });
+    queryFilters += "}";
+    localStorage.setItem('formValues', queryFilters);
+  }
 
 
+  getQueryParams();
 
-  
   const fetchSubcategoryProducts = async () => {
     setIsLoading(true);
     try {
-      console.log(filterParams)
       const response = await fetch(`${API}/products/filter?subcategory=${queryParameters.get('subcategory')}&${filterParams}`, {
         headers: {},
       });
@@ -75,7 +93,7 @@ function ProductsDisplay() {
     const products = productsData;
     let jsxElements = [];
     products?.forEach((element, index) => {
-      jsxElements?.push(<ProductCard product={element} key={index} />);
+      jsxElements?.push(<ProductCard product={element} key={index} isLoggedIn={isLoggedIn} />);
     });
 
     return jsxElements;
@@ -93,7 +111,7 @@ function ProductsDisplay() {
     filterData.forEach((filter) => {
       initialValues[`${filter.name}`] = {};
       filter?.values.forEach((value) => {
-        initialValues[`${filter.name}`][value.replace('.', '_')] = false;
+        initialValues[`${filter.name}`][value?.replace('.', '_')] = false;
       });
     });
 
@@ -103,34 +121,28 @@ function ProductsDisplay() {
       initialValues = savedFormValues;
     }
 
-    // console.log(initialValues)
-    // console.log(Object.entries(JSON.parse(localStorage.getItem('formValues'))))
-
     return (
       <Formik
         initialValues={initialValues}
         onSubmit={(values) => {
-          console.log(Object.entries(values))
           // Convert form values to query parameters
           const queryParams = Object.entries(values)
             .flatMap(([filterName, filterValues]) =>
-              Object.entries(filterValues).filter(([valueName, isChecked]) => isChecked).map(([valueName, isChecked]) => `${filterName}=${valueName.replace('_', '.').replace(' ', '%20')}`)
+              Object.entries(filterValues).filter(([valueName, isChecked]) => isChecked).map(([valueName, isChecked]) => `${filterName}=${valueName?.replace('_', '.')?.replace(' ', '%20')}`)
             )
             .join('&');
           setFilterParams(queryParams);
-          console.log(queryParams)
 
           const newUrl = `?subcategory=${queryParameters.get('subcategory')}&${queryParams}`;
 
           // Save form values to local storage
-          localStorage.setItem('formValues', JSON.stringify(values));
 
           navigate(newUrl);
         }}
       >
         {({ setFieldValue, values }) => (
           <Form className='flex flex-col gap-y-8'>
-            <button type='submit' className='bg-secondary' >Filter</button>
+            <button type='submit' className='bg-secondary font-heading text-white font-bold p-1 rounded-md' >Filtreaza</button>
             {generateFilters(filterData, setFieldValue, values)}
           </Form>
         )}
@@ -149,10 +161,10 @@ function ProductsDisplay() {
               <Field
                 id={`${filterObj.name}`}
                 type="checkbox"
-                name={`${filterObj.name}.${value.replace('.', '_')}`}
+                name={`${filterObj.name}.${value?.replace('.', '_')}`}
                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded"
                 onClick={(event) => {
-                  setFieldValue(`${filterObj.name}.${value.replace('.', '_')}`, event.target.checked);
+                  setFieldValue(`${filterObj.name}.${value?.replace('.', '_')}`, event.target.checked);
                 }}
               />
               <label htmlFor={`${filterObj.name}`} class="ms-2 text-sm font-medium text-gray-900">{value}</label>
@@ -172,7 +184,7 @@ function ProductsDisplay() {
       // Convert form values to query parameters
       const queryParams = Object.entries(savedFormValues)
         .flatMap(([filterName, filterValues]) =>
-          Object.entries(filterValues).filter(([valueName, isChecked]) => isChecked).map(([valueName, isChecked]) => `${filterName}=${valueName.replace('_', '.').replace(' ', '%20')}`)
+          Object.entries(filterValues).filter(([valueName, isChecked]) => isChecked).map(([valueName, isChecked]) => `${filterName}=${valueName?.replace('_', '.')?.replace(' ', '%20')}`)
         )
         .join('&');
       setFilterParams(queryParams);
@@ -186,7 +198,7 @@ function ProductsDisplay() {
       // Convert form values to query parameters
       const queryParams = Object.entries(savedFormValues)
         .flatMap(([filterName, filterValues]) =>
-          Object.entries(filterValues).filter(([valueName, isChecked]) => isChecked).map(([valueName, isChecked]) => `${filterName}=${valueName.replace('_', '.').replace(' ', '%20')}`)
+          Object.entries(filterValues).filter(([valueName, isChecked]) => isChecked).map(([valueName, isChecked]) => `${filterName}=${valueName?.replace('_', '.')?.replace(' ', '%20')}`)
         )
         .join('&');
       setFilterParams(queryParams);
@@ -223,19 +235,18 @@ function ProductsDisplay() {
 
   return (
     <div className='w-full flex justify-center'>
-
+      <ToastContainer />
       <div className='contentContainer verticalContent flex flex-col w-full'>
 
 
         <div className='flex'>
 
           <div className='flex flex-col gap-8'>
-
-            {displayFilters()}
+            {match && match[2] === 'search' ? null : displayFilters()}
 
           </div>
           <div className='flex flex-col w-full'>
-            <div>ceva</div>
+            {/* <div>ceva</div> */}
 
             <div className='w-full flex flex-row flex-wrap shrink grow basis-0 gap-x-[1rem] gap-y-[2rem] justify-around  content-start '>
 

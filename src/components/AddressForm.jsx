@@ -5,6 +5,9 @@ import { useAuthContext } from "../contexts/AuthContext";
 import { API, } from "../constants";
 import Cookies from 'js-cookie';
 import addressValidationSchema from '../validationSchemas/addressValidationSchema';
+
+import { showToastMessage } from '../helpers.js';
+
 function AddressForm() {
     const { isLoggedIn, user } = useAuthContext();
     const [countyData, setCountyData] = useState([]);
@@ -85,8 +88,6 @@ function AddressForm() {
             });
 
             const data = await response.json();
-            console.log(data)
-            // Step 2: Update the user with the new delivery address
             const addressId = data.data.id;
             const userId = userData.id;
             const addressIds = user.delivery_addresses.map(address => address.id);
@@ -101,11 +102,21 @@ function AddressForm() {
 
                 }),
             });
+            if (data?.error?.message) {
+                showToastMessage(data?.error?.message, "error");
+            } else {
+                
+                showToastMessage("Adresa a fost adaugata cu succes!", "success");
+
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
+
+            }
 
 
-            window.location.reload();
         } catch (error) {
-            console.error('Error:', error);
+            showToastMessage('Adresa nu a putut fi adaugata. Va rugam sa incercati din nou mai tarziu.', 'error')
         }
     }
 
@@ -132,7 +143,6 @@ function AddressForm() {
             }}
             validationSchema={addressValidationSchema}
             onSubmit={(values) => {
-                console.log('Submitting form', values);
                 addDeliveryAddressToUser(values, userData);
             }}
         >

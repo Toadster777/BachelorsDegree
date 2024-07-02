@@ -2,7 +2,11 @@ import React from 'react';
 import { Formik, Field, Form } from 'formik';
 
 function SearchBar() {
+
+    const navExclusions = ['/login', '/signUp', '/contact-us', '/profile', '/reset-password', 'user/order/:orderId', 'user/order-history', '/favorites'];
+    let path = window.location.pathname
     return (
+        <div className={`w-full flex justify-center ${navExclusions.indexOf(path) > -1 ? 'hidden' : ''}`}>
         <Formik
             initialValues={{
                 searchParam: '',
@@ -25,6 +29,7 @@ function SearchBar() {
                 </div>
             </Form>
         </Formik>
+    </div >
     )
 }
 

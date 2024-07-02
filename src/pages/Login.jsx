@@ -6,7 +6,8 @@ import { API, SALT } from "../constants";
 import { setToken } from "../helpers";
 import { hash } from 'bcryptjs';
 import loginSchema from '../validationSchemas/loginValidation';
-
+import { ToastContainer } from "react-toastify";
+import { showToastMessage } from '../helpers.js';
 
 function Login() {
 
@@ -15,8 +16,6 @@ function Login() {
     const { setUser } = useAuthContext();
 
     const [isLoading, setIsLoading] = useState(false);
-
-    const [error, setError] = useState("");
 
     function hashPassword(value) {
         return new Promise((resolve, reject) => {
@@ -30,21 +29,24 @@ function Login() {
 
 
     const onFinish = async (values) => {
-
+        const body = {
+            identifier: values.identifier,
+            password: await hashPassword(values.password),
+        };
         setIsLoading(true);
         try {
-            values.password = await hashPassword(values.password);
             const response = await fetch(`${API}/auth/local`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(values),
+                body: JSON.stringify(body),
             });
 
             const data = await response.json();
-            if (data?.error) {
-                throw data?.error;
+
+            if (data?.error?.message) {
+                showToastMessage(data?.error?.message, "error");
             } else {
                 // set the token
                 setToken(data.jwt);
@@ -52,13 +54,15 @@ function Login() {
                 // set the user
                 setUser(data.user);
 
-                navigate("/", { replace: true });
-                message.success(`Welcome back ${data.user.username}!`);
+                showToastMessage("Autentificat cu succes!", "success");
+
+                setTimeout(() => {
+                    navigate("/", { replace: true });
+                }, 4000);
 
             }
         } catch (error) {
-            console.error(error);
-            setError(error?.message ?? "Something went wrong!");
+            showToastMessage("Ceva nu a mers bine, va rugam sa incercati din nou!", "error");
         } finally {
             setIsLoading(false);
         }
@@ -67,6 +71,7 @@ function Login() {
 
     return (
         <div className='w-full flex justify-center'>
+            <ToastContainer />
             <div className='contentContainer verticalContent flex justify-center items-center w-full '>
                 <Formik
                     initialValues={{

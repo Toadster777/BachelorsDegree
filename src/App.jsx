@@ -12,7 +12,12 @@ import ProductsDisplay from './pages/ProductsDisplay'
 import ProductPage from './pages/ProductPage'
 import Checkout from './pages/Checkout'
 import ProfilePage from './pages/ProfilePage'
+import Favorites from './pages/Favorites'
+import Contact from './pages/Contact'
 import { ChatAssistant } from './components/chatAssistant'
+import ResetPassword from './pages/ResetPassword'
+import OrderHistory from './pages/OrderHistory'
+import OrderPage from './pages/OrderPage'
 
 function App() {
 
@@ -41,8 +46,11 @@ function App() {
           <Route path="/products/search" element={<ProductsDisplay />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path='/profile' element={<ProfilePage />} />
-          {/* <Route path='/contact-us' element={<Contact />} />
-          <Route path='/favorites' element={<Favorites />} /> */}
+          <Route path='/contact-us' element={<Contact />} />
+          <Route path='/favorites' element={<Favorites />} />
+          <Route path='/reset-password' element={<ResetPassword />} />
+          <Route path='user/order-history' element={<OrderHistory />} />
+          <Route path='user/order/:orderId' element={<OrderPage />} />
           <Route path='*' element={<NotFound />} />
         </Routes>
 

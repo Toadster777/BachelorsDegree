@@ -5,7 +5,7 @@ import { useAuthContext } from "../contexts/AuthContext";
 import { API, } from "../constants";
 import uniqid from 'uniqid';
 import Cookies from 'js-cookie';
-
+import { showToastMessage } from '../helpers.js';
 function OrderForm({ total, productsIds }) {
 
     const [countyData, setCountyData] = useState([]);
@@ -40,6 +40,7 @@ function OrderForm({ total, productsIds }) {
     };
 
     const postOrder = async (orderData) => {
+
         setIsLoading(true);
         const authToken = Cookies.get('authToken');
         let headers = {};
@@ -64,16 +65,21 @@ function OrderForm({ total, productsIds }) {
             });
 
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                showToastMessage("A apărut o eroare la trimiterea comenzii", "error");
             }
 
             const data = await response.json();
-            localStorage.removeItem('checkout');
-            setIsLoading(false);
-            return data;
+
+            if (data?.error?.message) {
+                showToastMessage(data?.error?.message, "error");
+            } else {
+                localStorage.removeItem('checkout');
+                showToastMessage("Comanda trimisă cu succes!", "success")
+            }
+
         } catch (error) {
             setIsLoading(false);
-            console.error('Error:', error);
+            showToastMessage("A apărut o eroare la trimiterea comenzii", "error");
         }
     };
 
@@ -159,7 +165,7 @@ function OrderForm({ total, productsIds }) {
         let body = {};
 
         if (Cookies.get('authToken') !== undefined) {
-            const users_permissions_user = user.id;
+            const userId = user.id;
             body = {
                 data: {
                     ...formikValues,
@@ -167,10 +173,9 @@ function OrderForm({ total, productsIds }) {
                     placed,
                     totalAmmount,
                     products,
-                    users_permissions_user,
+                    "user": userId,
                 }
             };
-
         }
 
         else {
@@ -186,7 +191,9 @@ function OrderForm({ total, productsIds }) {
         }
 
         postOrder(body);
-        window.location.reload();
+        setTimeout(() => {
+            window.location.reload();
+        }, 2000);
     }
 
 

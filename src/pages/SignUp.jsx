@@ -6,6 +6,8 @@ import { API, SALT } from "../constants";
 import { setToken } from "../helpers";
 import { hash } from 'bcryptjs';
 import signUpSchema from '../validationSchemas/signUpValidation.js';
+import { ToastContainer } from "react-toastify";
+import { showToastMessage } from '../helpers.js';
 
 
 function SignUp() {
@@ -15,8 +17,6 @@ function SignUp() {
     const { setUser } = useAuthContext();
 
     const [isLoading, setIsLoading] = useState(false);
-
-    const [error, setError] = useState("");
 
 
     function hashPassword(value) {
@@ -29,23 +29,28 @@ function SignUp() {
     }
 
     const onFinish = async (values) => {
-
+        const body = {
+            firstName: values.firstName,
+            lastName: values.lastName,
+            email: values.email,
+            phoneNo: values.phoneNo,
+            username: values.email,
+            password: await hashPassword(values.password),
+        };
         setIsLoading(true);
         try {
-            values.confirmPassword = undefined;
-            values.username = values.email;
-            values.password = await hashPassword(values.password);
             const response = await fetch(`${API}/auth/local/register`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(values),
+                body: JSON.stringify(body),
             });
 
             const data = await response.json();
-            if (data?.error) {
-                throw data?.error;
+
+            if (data?.error?.message) {
+                showToastMessage(data?.error?.message, "error");
             } else {
                 // set the token
                 setToken(data.jwt);
@@ -53,11 +58,17 @@ function SignUp() {
                 // set the user
                 setUser(data.user);
 
-                navigate("/", { replace: true });
+                showToastMessage("Cont Creat cu succes!", "success");
+
+                setTimeout(() => {
+                    navigate("/login", { replace: true });
+                }, 4000);
+
+
+
             }
         } catch (error) {
-            console.error(error);
-            setError(error?.message ?? "Something went wrong!");
+            showToastMessage("Ceva nu a mers bine, va rugam sa incercati din nou!", "error");
         } finally {
             setIsLoading(false);
         }
@@ -65,6 +76,7 @@ function SignUp() {
     return (
 
         <div className='w-full flex justify-center'>
+            <ToastContainer />
             <div className='contentContainer verticalContent w-full flex justify-center items-center '>
                 <Formik
                     initialValues={{

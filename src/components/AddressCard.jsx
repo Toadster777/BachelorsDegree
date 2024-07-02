@@ -1,14 +1,13 @@
 import React from 'react'
 import Cookies from 'js-cookie';
 import { API, } from "../constants";
-
+import { showToastMessage } from '../helpers.js';
 function AddressCard({ addressData }) {
 
 
     const authToken = Cookies.get('authToken');
 
     const deleteAddress = async () => {
-        console.log(addressData)
         try {
             const response = await fetch(`${API}/delivery-addresses/${addressData.id}`, {
                 method: 'DELETE',
@@ -18,11 +17,19 @@ function AddressCard({ addressData }) {
             });
 
             if (!response.ok) {
-                throw new Error('Error deleting address');
+                showToastMessage("Adresa nu a putut fi stearsa", "error");
+            }
+
+            else {
+
+                showToastMessage("Adresa a fost stearsa cu succes", "success")
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
             }
 
             // Refresh the page or update state here
-            window.location.reload();
+
         } catch (error) {
             console.error('Error:', error);
         }

@@ -3,6 +3,7 @@ import UserCard from '../components/UserCard'
 import AddressForm from '../components/AddressForm'
 import { useAuthContext } from "../contexts/AuthContext";
 import AddressCard from '../components/AddressCard';
+import { ToastContainer } from "react-toastify";
 function ProfilePage() {
 
     const { isLoggedIn, user } = useAuthContext();
@@ -14,7 +15,6 @@ function ProfilePage() {
         if (!addressData) {
             return null;
         }
-        console.log(addressData)
         let jsxElements = [];
         addressData?.forEach(address => {
             jsxElements.push(<AddressCard addressData={address} />);
@@ -30,10 +30,10 @@ function ProfilePage() {
 
     return (
         <div className='w-full flex justify-center'>
+            <ToastContainer />
+            <div className='contentContainer verticalContentflex justify-between items-center w-full pb-12 '>
 
-            <div className='contentContainer verticalContent flex flex-col w-full gap-12'>
-
-                <div className='flex w-full gap-x-8'>
+                <div className='flex w-full gap-x-8 mb-12 itemContainer'>
 
                     <UserCard user={userData} />
                     <div className='flex w-full flex-wrap h-fit gap-6'>

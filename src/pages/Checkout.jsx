@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { API, } from "../constants";
 import ProductCheckoutCard from '../components/ProductCheckoutCard';
 import OrderForm from '../components/OrderForm';
-import UserCard from '../components/UserCard';
+import { ToastContainer } from "react-toastify";
 
 function Checkout() {
 
@@ -53,14 +53,12 @@ function Checkout() {
       const checkout = cartData
       const total = checkout.reduce((total = 0, item) => {
         const product = productData?.find(p => p.id === item.productId);
-        const price = parseInt(product?.price.replace('.', ''));
+        const price = product?.price;
         return total + (price * item?.qty);
       }, 0);
       return total.toFixed(2);
     }
   };
-
-  console.log(calculateTotal(productData));
 
   useEffect(() => {
     const checkout = localStorage.getItem('checkout');
@@ -77,9 +75,10 @@ function Checkout() {
 
   return (
     <div className='w-full flex justify-center'>
-      <div className='contentContainer verticalContent flex justify-between content-start w-full gap-x-8 '>
+      <ToastContainer />
+      <div className='contentContainer verticalContent itemContainer flex justify-between content-start w-full gap-x-8 '>
         <div className='flex flex-col gap-y-10'>
-          {displayCartProducts(productData)}
+          {productData ? displayCartProducts(productData) : <h1 className='text-2xl font-heading font-bold'>Nu exista produse in cos!</h1>}
         </div>
 
         <div className='flex w-full max-w-[700px]'>

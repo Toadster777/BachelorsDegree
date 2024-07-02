@@ -36,7 +36,7 @@ textarea {
 
 
 .verticalContent {
-    min-height: calc(100vh - 240px - 134px);
+    min-height: calc(100vh - 240px - 228px);
 }
 
 .contentContainer {
@@ -140,6 +140,11 @@ textarea {
 
 .rcw-client>.rcw-message-text {
     background-color: #f4f7f9;
+}
+
+.rcw-message-text>p>a {
+    text-decoration: underline;
+    color: #215196;
 }
 
 
@@ -274,6 +279,20 @@ textarea {
     }
 
 
+}
+
+@media screen and (max-width:1520px) {
+    .itemContainer {
+        display: flex;
+        flex-direction: column;
+        gap: 4rem;
+        padding-bottom: 8rem;
+        align-items: center;
+    }
+
+    .contactText {
+        text-align: center;
+    }
 }
 
 

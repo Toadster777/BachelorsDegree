@@ -3,7 +3,7 @@ import { Formik, Field, Form } from 'formik';
 import userValidationSchema from '../validationSchemas/userDataValidationSchema';
 import { API, } from "../constants";
 import Cookies from 'js-cookie';
-
+import { showToastMessage } from '../helpers.js';
 
 function UserCard({ user }) {
 
@@ -22,11 +22,18 @@ function UserCard({ user }) {
             });
 
             const data = await userResponse.json();
+            if (data?.error?.message) {
+                showToastMessage(data?.error?.message, "error");
+            } else {
+                showToastMessage("Datele au fost actualizate cu succes!", "success");
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
 
-            console.log('Success:', data);
-            window.location.reload();
+            }
+
         } catch (error) {
-            console.error('Error:', error);
+            showToastMessage('Adresa nu a putut fi adaugata. Va rugam sa incercati din nou mai tarziu.', 'error')
         }
     }
 
@@ -35,7 +42,7 @@ function UserCard({ user }) {
         <div className="w-full flex flex-col gap-y-8">
             <div className='w-full p-8  max-w-[48rem] bg-white border border-primary rounded-lg shadow  flex items-center justify-between h-fit' id='user-me'>
                 <div className='flex content-center items-center'>
-                    <img className="w-24 h-24 rounded-full object-cover" src="../../public/cover11.jpg" alt="TA" />
+                    <div className={`h-12 w-12   rounded-full bg-secondary font-heading font-bold text-xl flex justify-center items-center`}>{user?.firstName[0] + user?.lastName[0]}</div>
                 </div>
 
                 <div>
@@ -57,7 +64,7 @@ function UserCard({ user }) {
                     </table>
                 </div>
 
-                <button className="text-white  md:max-w-[6rem] bg-secondary font-medium rounded-lg text-sm w-full px-2 py-2.5 text-center " onClick={() => setFormVisible(!isFormVisible)}>Editeaza</button>
+                <button className="text-white  max-w-[6rem] bg-secondary font-medium rounded-lg text-sm w-full px-2 py-2.5 text-center " onClick={() => setFormVisible(!isFormVisible)}>Editeaza</button>
             </div>
 
 
@@ -71,7 +78,6 @@ function UserCard({ user }) {
                     }}
                     validationSchema={userValidationSchema}
                     onSubmit={values => {
-                        console.log(values);
                         handleSubmit(values);
                     }}
                     enableReinitialize

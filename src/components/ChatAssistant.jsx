@@ -70,13 +70,12 @@ export const ChatAssistant = () => {
     };
 
     const handleNewUserMessage = (newMessage) => {
-        console.log(`New message incoming! ${newMessage}`);
         sendUserMessage(newMessage);
     };
 
     useEffect(() => {
         fetchSubcategories();
-        addResponseMessage('Buna! Sunt asistentul dumneavoastra virtual. Iata o lista de lucruri cu care te pot ajuta:\n1. Pot sa iti prezint subcategoriile disponibile.\n2. Pot sa iti ofer informatii despre produsele dintr-o anumita subcategorie.\n3.')
+        addResponseMessage('Buna! Sunt asistentul dumneavoastra virtual. Iata o lista de lucruri cu care te pot ajuta:\n1. Pot sa iti prezint subcategoriile disponibile.\n2. Pot sa iti ofer informatii despre produsele dintr-o anumita subcategorie.\n3. Dupa o discutie legata de produsele dintr-o subcategorie, iti pot oferi un link de filtrare.')
     }, []);
 
     return (

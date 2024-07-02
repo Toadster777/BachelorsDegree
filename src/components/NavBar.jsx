@@ -10,7 +10,7 @@ export const NavBar = () => {
     const { isLoggedIn, user } = useAuthContext();
     const [userData, setUserData] = useState(user);
     let path = window.location.pathname
-    const navExclusions = ['/login', '/signUp',];
+    const navExclusions = ['/login', '/signUp', '/contact-us', '/profile', '/reset-password', 'user/order/:orderId', 'user/order-history', '/favorites'];
 
     useEffect(() => {
         path = window.location.pathname
@@ -20,7 +20,7 @@ export const NavBar = () => {
     return (
 
 
-        <nav className="bg-primary flex flex-col  relative">
+        <nav className="bg-primary flex flex-col  relative mb-8">
             <div className='flex justify-center self-center w-full'>
                 <div className=" flex flex-wrap items-center justify-between mx-auto py-4 w-full contentContainer ">
                     <a href="https://flowbite.com/" className="flex items-center space-x-3 rtl:space-x-reverse">
@@ -30,14 +30,14 @@ export const NavBar = () => {
                     <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
                         <div className='flex justify-between items-center'>
                             <div className='flex items-center justify-between gap-2 md:gap-4'>
-                                <FavoritesSvg />
+                                <FavoritesSvg isLoggedIn={isLoggedIn} />
                                 <ShoppingCart />
                             </div>
 
 
                             <button type="button" className={"text-sm bg-gray-800 rounded-full md:me-0 hidden md:flex md:ml-6 " + (isLoggedIn ? '' : '!hidden')} id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
                                 <span className="sr-only">Open user menu</span>
-                                <img className="w-10 h-10 rounded-full object-cover" src="../../public/cover11.jpg" alt="TA" />
+                                <div className={`h-10 w-10 rounded-full bg-secondary font-heading font-bold text-xl flex justify-center items-center`}>{ userData?.firstName[0] + userData?.lastName[0]}</div>
                             </button>
 
                             <AccountSvg />
@@ -55,7 +55,10 @@ export const NavBar = () => {
                                     <a href="/profile" className="block px-4 py-2 text-sm text-gray-700  ">Profil</a>
                                 </li>
                                 <li>
-                                    <button onClick={removeToken} className="block px-4 py-2 text-sm text-gray-700  ">Sign out</button>
+                                    <a href="user/order-history" className="block px-4 py-2 text-sm text-gray-700  ">Istoric Comenzi</a>
+                                </li>
+                                <li>
+                                    <button onClick={removeToken} className="block px-4 py-2 text-sm text-gray-700  ">Delogare</button>
                                 </li>
                             </ul>
                         </div>
@@ -73,21 +76,21 @@ export const NavBar = () => {
                             <li>
                                 <a href="/" className="block py-2 px-3 text-gray-900  rounded md:bg-transparent md:p-0 md:text-white " aria-current="page">Home</a>
                             </li>
-                            <li className='md:hidden'>
-                                <a href="/login" className="block py-2 px-3 text-gray-900  rounded md:bg-transparent md:p-0 md:text-white " aria-current="page">Account</a>
+                            <li className={`md:hidden ${isLoggedIn ? '' : 'hidden'}`}>
+                                <a href="/profile" className="block py-2 px-3 text-gray-900  rounded md:bg-transparent md:p-0 md:text-white " aria-current="page">Contul Meu</a>
+                            </li>
+                            <li className={`md:hidden ${isLoggedIn ? '' : 'hidden'}`}>
+                                <a href="user/order-history" className="block py-2 px-3 text-gray-900  rounded md:bg-transparent md:p-0 md:text-white " aria-current="page">Istoric Comenzi</a>
                             </li>
                             <li>
-                                <a href="/categories" className="block py-2 px-3 text-gray-900 rounded  md:text-white   md:p-0  ">Categories</a>
+                                <a href="/categories" className="block py-2 px-3 text-gray-900 rounded  md:text-white   md:p-0  ">Categorii</a>
                             </li>
                             <li>
-                                <a href="#" className="block py-2 px-3 text-gray-900 rounded md:text-white    md:p-0  ">Contact</a>
-                            </li>
-                            <li>
-                                <a href="#" className="block py-2 px-3 text-gray-900 rounded md:text-white    md:p-0  ">Locatii</a>
+                                <a href="/contact-us" className="block py-2 px-3 text-gray-900 rounded md:text-white    md:p-0  ">Contact</a>
                             </li>
                             <li className='md:hidden flex justify-center items-center w-full mt-6'>
-                                <button onClick={removeToken} className={'block py-2 px-3 text-white  rounded-lg bg-secondary w-full  ' + (isLoggedIn ? '' : '!hidden')} aria-current="page">Sign Out</button>
-                                <a href='/login' className={'block py-2 px-3  text-center text-white  rounded-lg bg-secondary w-full  ' + (isLoggedIn ? '!hidden' : '')} aria-current="page">Sign In</a>
+                                <button onClick={removeToken} className={'block py-2 px-3 text-white  rounded-lg bg-secondary w-full  ' + (isLoggedIn ? '' : '!hidden')} aria-current="page">Delogare</button>
+                                <a href='/login' className={'block py-2 px-3  text-center text-white  rounded-lg bg-secondary w-full  ' + (isLoggedIn ? '!hidden' : '')} aria-current="page">Logare</a>
                             </li>
 
                         </ul>
@@ -96,7 +99,7 @@ export const NavBar = () => {
             </div>
 
 
-            <div className={'bg-white w-full flex self-center justify-center pb-12 ' + (navExclusions.indexOf(path) > -1 ? 'hidden' : '')}> <SearchBar /> </div>
+            <div className={`bg-white w-full flex self-center justify-center   ${navExclusions.indexOf(path) > -1 ? 'pb-[150px]' : 'pb-12'} ` }> <SearchBar /> </div>
         </nav>
 
 
